@@ -103,8 +103,8 @@ class ScmpArg(ctypes.Structure):
 
     def __repr__(self):
         return (
-            "<{self.__class__.__name__}(arg={self.arg}, op=ScmpCmp.{op}, "
-            "a={self.datum_a}, b={self.datum_b}>"
+            "{self.__class__.__name__}({self.arg}, ScmpCmp.{op}, "
+            "{self.datum_a}, {self.datum_b})"
         ).format(self=self, op=ScmpCmp(self.op)._name_)
 
 

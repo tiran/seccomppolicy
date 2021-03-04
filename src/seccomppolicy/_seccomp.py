@@ -38,6 +38,9 @@ class Syscall:
     def __repr__(self):
         return "<{self.__class__.__name__} {self.name}({self.nr})>".format(self=self)
 
+    def __str__(self):
+        return self.name
+
     @property
     def name(self):
         return self._name

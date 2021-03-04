@@ -13,12 +13,13 @@ __all__ = (
     "translate_scmp",
 )
 
+REPR = "{self.__class__.__name__}.{self._name_}"
+REPR_VERBOSE = "<{self.__class__.__name__}.{self._name_}: 0x{self._value_:x}>"
+
 
 class ScmpEnum(enum.IntEnum):
     def __repr__(self):
-        return "<{self.__class__.__name__}.{self._name_}: 0x{self._value_:x}>".format(
-            self=self
-        )
+        return REPR.format(self=self)
 
 
 def _scmp_act_errno(x):
@@ -295,7 +296,7 @@ ARCHES_MAP = {
 }
 
 
-class Capabilities(enum.IntEnum):
+class Capabilities(ScmpEnum):
     """linux/capability.h"""
 
     CAP_CHOWN = 0

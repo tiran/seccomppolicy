@@ -86,9 +86,9 @@ class ScmpArg(ctypes.Structure):
 
     def __init__(self, arg, op, datum_a, datum_b=0):
         if arg < 0 or arg > 5:
-            raise ValueError(f"invalid arg '{arg}'")
+            raise ValueError("invalid arg '{}'".format(arg))
         if op not in ScmpCmp:
-            raise ValueError(f"invalid op '{op}'")
+            raise ValueError("invalid op '{}'".format(op))
         # datum_b is only used by SCMP_CMP_MASKED_EQ
         super().__init__(arg, op, datum_a, datum_b)
 

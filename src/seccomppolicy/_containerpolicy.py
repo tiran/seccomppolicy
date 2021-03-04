@@ -1,8 +1,14 @@
 import json
 import pprint
+import os
+
+from packaging.version import parse as parse_version
 
 from ._constants import translate_scmp
 from ._seccomp import ScmpArg, Syscall
+
+
+CURRENT_KERNEL_VERSION = parse_version(os.uname().release.split("_", 1)[0])
 
 
 def load_file(fname):

@@ -8,7 +8,7 @@ from ._constants import translate_scmp
 from ._seccomp import ScmpArg, Syscall
 
 
-CURRENT_KERNEL_VERSION = parse_version(os.uname().release.split("_", 1)[0])
+CURRENT_KERNEL_VERSION = parse_version(os.uname().release.split("-", 1)[0])
 
 
 def load_file(fname):

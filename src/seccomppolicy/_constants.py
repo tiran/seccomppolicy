@@ -1,7 +1,10 @@
 import enum
 
+
 __all__ = (
     "Capabilities",
+    "CapFlag",
+    "CapMode",
     "ScmpAction",
     "ScmpArch",
     "ScmpCmp",
@@ -336,6 +339,23 @@ class Capabilities(enum.IntEnum):
     CAP_PERFMON = 38
     CAP_BPF = 39
     CAP_CHECKPOINT_RESTORE = 40
+
+
+class CapFlag(enum.IntEnum):
+    """cap_flag_t sys/capability.h"""
+
+    EFFECTIVE = 0
+    PERMITTED = 1
+    INHERITABLE = 2
+
+
+class CapMode(enum.IntEnum):
+    """cap_mode_t sys/capability.h"""
+
+    UNCERTAIN = 0
+    NOPRIV = 1
+    PURE1E_INIT = 2
+    PURE1E = 3
 
 
 def translate_scmp(s):

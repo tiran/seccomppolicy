@@ -343,7 +343,30 @@ class Capabilities(ScmpEnum):
 
 
 class CapFlag(enum.IntEnum):
-    """cap_flag_t sys/capability.h"""
+    """cap_flag_t sys/capability.h
+
+    See man capabilities(7)
+
+    Effective:
+      Set of capabilities used by Kernel for permission checks.
+
+    Permitted:
+      The limiting superset for effective capabilities and additional
+      inheritable capabilities (unless process has CAP_PCAP).
+
+    Inheritable:
+      Capabilities by child processes across execve(). Inheritable
+      capabilities become effective capabilities and are *added* to permitted
+      capabilities.
+
+    Bounding:
+      Limit capabilities that can be *gained* during execve(), e.g. by file
+      caps (``getcap arping`` -> ``arping cap_net_raw=p``).
+
+    Ambient:
+      Set of capabilities preserved across execve() for unprivileged processes.
+      A capability cannot be ambient unless it's permitted and inheritable.
+    """
 
     EFFECTIVE = 0
     PERMITTED = 1
@@ -357,6 +380,18 @@ class CapMode(enum.IntEnum):
     NOPRIV = 1
     PURE1E_INIT = 2
     PURE1E = 3
+
+
+class Prctl(enum.IntEnum):
+    """linux/prctl.h for prctl()"""
+
+    # drop caps on setuid()
+    PR_GET_KEEPCAPS = 7
+    PR_SET_KEEPCAPS = 8
+
+    # grant new privs druing execve()
+    PR_SET_NO_NEW_PRIVS = 38
+    PR_GET_NO_NEW_PRIVS = 39
 
 
 def translate_scmp(s):

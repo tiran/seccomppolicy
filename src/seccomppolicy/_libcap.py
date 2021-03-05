@@ -29,12 +29,11 @@ except (OSError, ImportError):
     cap_dup = None
     cap_compare = None
     cap_init = None
-    cap_get_proc = None
-    cap_set_proc = None
-    cap_get_flag = None
-    cap_set_flag = None
-    cap_get_mode = None
-    cap_set_mode = None
+    cap_get_proc = cap_set_proc = None
+    cap_get_flag = cap_set_flag = None
+    cap_get_bound = cap_drop_bound = None
+    cap_get_ambient = cap_set_ambient = None
+    cap_get_mode = cap_set_mode = None
     cap_free = None
 else:
     HAS_LIBCAP = True
@@ -114,7 +113,29 @@ else:
     cap_clear_flag.restype = ctypes.c_int
     cap_clear_flag.errcheck = _check_success
 
-    # high level get/set mode
+    # process-wide bounding set
+    cap_get_bound = _lc.cap_get_bound
+    cap_get_bound.argtypes = (cap_value_t,)
+    cap_get_bound.restype = ctypes.c_int
+    cap_get_bound.errcheck = _check_success
+
+    cap_drop_bound = _lc.cap_drop_bound
+    cap_drop_bound.argtypes = (cap_value_t,)
+    cap_drop_bound.restype = ctypes.c_int
+    cap_drop_bound.errcheck = _check_success
+
+    # process-wide ambient set
+    cap_get_ambient = _lc.cap_get_ambient
+    cap_get_ambient.argtypes = (cap_value_t,)
+    cap_get_ambient.restype = ctypes.c_int
+    cap_get_ambient.errcheck = _check_success
+
+    cap_set_ambient = _lc.cap_set_ambient
+    cap_set_ambient.argtypes = (cap_value_t, cap_flag_value_t)
+    cap_set_ambient.restype = ctypes.c_int
+    cap_set_ambient.errcheck = _check_success
+
+    # high level, process-wide get/set mode
     cap_get_mode = _lc.cap_get_mode
     cap_get_mode.argtype = ()
     cap_get_mode.restype = cap_mode_t
@@ -188,6 +209,26 @@ class _CapContext:
         cap_p = self._cap_p
         self._cap_p = None
         cap_free(cap_p)
+
+
+def cap_is_supported(cap):
+    """Macro CAP_IS_SUPPORTED(cap)"""
+    try:
+        cap_get_bound(cap)
+    except OSError:
+        return False
+    else:
+        return True
+
+
+def cap_ambient_supported():
+    """Macro CAP_AMBIENT_SUPPORTED()"""
+    try:
+        cap_get_ambient(Capabilities.CAP_CHOWN)
+    except OSError:
+        return False
+    else:
+        return True
 
 
 def has_cap(cap, flag=CapFlag.EFFECTIVE):

@@ -85,7 +85,9 @@ class Syscall:
     def __eq__(self, other):
         if not isinstance(other, Syscall):
             return NotImplemented
-        return self.name == other.name and self.nr == other.nr and self.arch == other.arch
+        return (
+            self.name == other.name and self.nr == other.nr and self.arch == other.arch
+        )
 
     def __lt__(self, other):
         if not isinstance(other, Syscall):

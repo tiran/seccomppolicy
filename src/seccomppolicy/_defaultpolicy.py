@@ -1,7 +1,9 @@
 from ._constants import Capabilities, ScmpAction, ScmpArch, ScmpCmp
 from ._libseccomp import ScmpArg
+from . import _seccomp
+from ._containerpolicy import IncludeCondition, ExcludeCondition
 
-__all__ = ("SUB_ARCHITECTURES",)
+__all__ = ("SUB_ARCHITECTURES", "DEFAULT_ACTION", "SYSCALLS")
 
 # https://src.fedoraproject.org/rpms/containers-common/blob/f34/f/seccomp.json
 SUB_ARCHITECTURES = {
@@ -565,3 +567,28 @@ EXTRA_CAPABILITIES = [
     Capabilities.CAP_MKNOD,
     Capabilities.CAP_AUDIT_CONTROL,
 ]
+
+
+def main():
+    with _seccomp.Seccomp(DEFAULT_ACTION) as sc:
+        for arch in SUB_ARCHITECTURES.get(_seccomp.NATIVE_ARCH, ()):
+            sc.add_arch(arch)
+        for ruleset in SYSCALLS:
+            # TODO: check includes and excludes
+            if "includes" in ruleset:
+                if not IncludeCondition(**ruleset["includes"]):
+                    continue
+            if "excludes" in ruleset:
+                if ExcludeCondition(**ruleset["excludes"]):
+                    continue
+            action = ruleset["action"]
+            args = ruleset.get("args", ())
+            for syscall in ruleset["names"]:
+                sc.add_rule(action, syscall, *args)
+
+        sc.load()
+        print(sc.export_pfc())
+
+
+if __name__ == "__main__":
+    main()

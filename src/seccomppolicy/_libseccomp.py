@@ -10,6 +10,7 @@ __all__ = (
     "scmp_filter_ctx",
     "seccomp_arch_add",
     "seccomp_arch_native",
+    "seccomp_export_pfc",
     "seccomp_init",
     "seccomp_load",
     "seccomp_release",
@@ -155,6 +156,11 @@ seccomp_rule_add_exact_array.argtypes = (
 )
 seccomp_rule_add_exact_array.restype = ctypes.c_int
 seccomp_rule_add_exact_array.errcheck = _check_success
+
+seccomp_export_pfc = _lsc.seccomp_export_pfc
+seccomp_export_pfc.argtypes = (scmp_filter_ctx, ctypes.c_int)
+seccomp_export_pfc.restype = ctypes.c_int
+seccomp_export_pfc.errcheck = _check_success
 
 seccomp_syscall_resolve_name_arch = _lsc.seccomp_syscall_resolve_name_arch
 seccomp_syscall_resolve_name_arch.argtypes = (ctypes.c_uint32, ctypes.c_char_p)
